@@ -16,15 +16,14 @@ import com.ateam.jjimppong_back.common.dto.response.board.GetCommentResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetFilteredBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetGoodResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetHateResponseDto;
-import com.ateam.jjimppong_back.common.dto.response.board.GetMyBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetRecommandBoardResponseDto;
 import com.ateam.jjimppong_back.common.entity.BoardEntity;
 import com.ateam.jjimppong_back.common.entity.CommentEntity;
 import com.ateam.jjimppong_back.common.entity.GoodEntity;
 import com.ateam.jjimppong_back.common.entity.HateEntity;
 import com.ateam.jjimppong_back.common.entity.UserEntity;
-import com.ateam.jjimppong_back.common.vo.BoardProjection;
-import com.ateam.jjimppong_back.common.vo.BoardVO;
+import com.ateam.jjimppong_back.common.vo.CommentProjection;
+import com.ateam.jjimppong_back.common.vo.CommentVO;
 import com.ateam.jjimppong_back.common.vo.FilteredBoardProjection;
 import com.ateam.jjimppong_back.common.vo.FilteredBoardVO;
 import com.ateam.jjimppong_back.common.vo.RecommandBoardProjection;
@@ -58,66 +57,61 @@ public class BoardServiceImplement implements BoardService {
       UserEntity userEntity = userRepository.findByUserId(userId);
       String userNickname = userEntity.getUserNickname();
       Integer userLevel = userEntity.getUserLevel();
-      // 계정 점수 test 용 게시글 작성 점수 //
-      Integer defaultScore = 60;
 
-      BoardEntity boardEntity = new BoardEntity(dto, userId, userNickname, userLevel);
-      // 계정 점수 test 용 게시글 점수 추가 작업 //
-      boardEntity.setBoardScore(defaultScore);
-      boardRepository.save(boardEntity);
-      
-      // 게시글 작성 시 게시글 작성 점수가 생겨 마이페이지 테이블에 게시글 점수만큼 계정 점수가 수정되고 추가 게시글을 작성하면 합산한 점수를 계정 점수에 수정 - 계정 점수 test 용//
-      myPageService.updateMyPageInfo(userId);
-      
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      return ResponseDto.databaseError();
-    }
+          BoardEntity boardEntity = new BoardEntity(dto, userId, userNickname, userLevel);
 
-    return ResponseDto.success(HttpStatus.CREATED);
-    
-  }
+          // ✅ textFileUrl이 DTO에 포함되어 있다면 Entity에도 반영
+          boardEntity.setTextFileUrl(dto.getTextFileUrl());
 
-  @Override
-  public ResponseEntity<? super GetMyBoardResponseDto> getMyBoard(String userId) {
-    
-    List<BoardVO> voList = new ArrayList<>();
+          boardRepository.save(boardEntity);
 
-    try {
+          // ✅ 마이페이지 점수 업데이트 로직
+          myPageService.updateMyPageInfo(userId);
 
-      BoardEntity boardEntity = boardRepository.findByUserId(userId);
-      String writerId = boardEntity.getUserId();
-      UserEntity userEntity = userRepository.findByUserId(writerId);
-      Integer userLevel = userEntity.getUserLevel();
-      List<BoardProjection> projections = boardRepository.findByUserIdOrderByBoardNumberDesc(userId);
-
-      for (BoardProjection B : projections) {
-        BoardVO vo = new BoardVO(
-          B.getBoardNumber(),
-          B.getBoardContent(),
-          B.getBoardTitle(),
-          B.getBoardAddressCategory(),
-          B.getBoardDetailCategory(),
-          B.getBoardWriteDate(),
-          B.getBoardViewCount(),
-          B.getBoardScore(),
-          B.getBoardAddress(),
-          B.getBoardImage(),
-          B.getUserId(),
-          B.getUserNickname(),
-          B.setUserLevel(userLevel)
-        );
-        voList.add(vo);
+      } catch (Exception exception) {
+          exception.printStackTrace();
+          return ResponseDto.databaseError();
       }
-      
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      return ResponseDto.databaseError();
-    }
 
-    return GetMyBoardResponseDto.success(voList);
-    
+      return ResponseDto.success(HttpStatus.CREATED);
   }
+
+  // @Override
+  // public ResponseEntity<? super GetMyBoardResponseDto> getMyBoard(String userId) {
+    
+  //   List<BoardVO> voList = new ArrayList<>();
+
+  //   try {
+
+  //     List<BoardProjection> projections = boardRepository.findByUserIdOrderByBoardNumberDesc(userId);
+
+  //     for (BoardProjection B : projections) {
+  //       BoardVO vo = new BoardVO(
+  //         B.getBoardNumber(),
+  //         B.getBoardContent(),
+  //         B.getBoardTitle(),
+  //         B.getBoardAddressCategory(),
+  //         B.getBoardDetailCategory(),
+  //         B.getBoardWriteDate(),
+  //         B.getBoardViewCount(),
+  //         B.getBoardScore(),
+  //         B.getBoardAddress(),
+  //         B.getBoardImage(),
+  //         B.getUserId(),
+  //         B.getUserNickname(),
+  //         B.getUserLevel()
+  //       );
+  //       voList.add(vo);
+  //     }
+      
+  //   } catch (Exception exception) {
+  //     exception.printStackTrace();
+  //     return ResponseDto.databaseError();
+  //   }
+
+  //   return GetMyBoardResponseDto.success(voList);
+    
+  // }
 
   @Override
   public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
@@ -128,6 +122,17 @@ public class BoardServiceImplement implements BoardService {
 
       boardEntity = boardRepository.findByBoardNumber(boardNumber);
       if (boardEntity == null) return ResponseDto.noExistBoard();
+
+      // 게시글 상세 보기를 요청했을때 유저 정보에 저장된 userLevel값이 보이도록 작업
+      String writerId = boardEntity.getUserId();
+      UserEntity userEntity = userRepository.findByUserId(writerId);
+      Integer userLevel = userEntity.getUserLevel();
+      Integer boardUserLevel = boardEntity.getUserLevel();
+      boolean isMatch = (boardUserLevel == userLevel);
+      if (!isMatch) {
+        boardUserLevel = userLevel;
+        boardEntity.setUserLevel(boardUserLevel);
+      }
       
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -144,7 +149,7 @@ public class BoardServiceImplement implements BoardService {
     List<RecommandBoardVO> voList = new ArrayList<>();
 
     try {
-        List<RecommandBoardProjection> projections = boardRepository.findAllWithLikeCount();
+        List<RecommandBoardProjection> projections = boardRepository.findAllWithGoodCount();
 
         for (RecommandBoardProjection p : projections) {
             RecommandBoardVO vo = new RecommandBoardVO(
@@ -326,18 +331,29 @@ public class BoardServiceImplement implements BoardService {
   @Override
   public ResponseEntity<? super GetCommentResponseDto> getComment(Integer boardNumber) {
     
-    List<CommentEntity> commentEntities = new ArrayList<>();
+    List<CommentVO> voList = new ArrayList<>();
 
     try {
 
-      commentEntities = commentRepository.findByBoardNumberOrderByWriteDateDesc(boardNumber);
+        List<CommentProjection> projections = commentRepository.findAllByBoardNumberOrderByCommentWriteDateDesc(boardNumber);
+        for (CommentProjection p : projections){
+          CommentVO vo = new CommentVO(
+            p.getCommentNumber(), 
+            p.getCommentWriteDate(), 
+            p.getCommentContent(), 
+            p.getCommentWriterId(), 
+            p.getUserNickname(), 
+            p.getUserLevel()
+            );
+            voList.add(vo);
+        }
       
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
 
-    return GetCommentResponseDto.success(commentEntities);
+    return GetCommentResponseDto.success(voList);
 
   }
 
@@ -381,6 +397,9 @@ public class BoardServiceImplement implements BoardService {
   @Override
   public ResponseEntity<ResponseDto> putGood(Integer boardNumber, String userId) {
     try {
+      
+      boolean isExistBoard = boardRepository.existsByBoardNumber(boardNumber);
+      if (!isExistBoard) return ResponseDto.noExistBoard();
 
       GoodEntity goodEntity = goodRepository.findByUserIdAndBoardNumber(userId, boardNumber);
       if (goodEntity == null) {
@@ -418,6 +437,9 @@ public class BoardServiceImplement implements BoardService {
   public ResponseEntity<ResponseDto> putHate(Integer boardNumber, String userId) {
     try {
 
+      boolean isExistBoard = boardRepository.existsByBoardNumber(boardNumber);
+      if (!isExistBoard) return ResponseDto.noExistBoard();
+
       HateEntity hateEntity = hateRepository.findByUserIdAndBoardNumber(userId, boardNumber);
       if (hateEntity == null) {
         hateEntity = new HateEntity(userId, boardNumber);
@@ -434,6 +456,71 @@ public class BoardServiceImplement implements BoardService {
     return ResponseDto.success(HttpStatus.OK);
   }
 
-  
+  @Override
+  public ResponseEntity<ResponseDto> deleteComment(Integer commentNumber, String userId) {
+    try {
+      
+      CommentEntity commentEntity = commentRepository.findByCommentNumber(commentNumber);
+      if (commentEntity == null) return ResponseDto.noExistComment();
+
+      String commentWriterId = commentEntity.getCommentWriterId();
+      boolean isWriter = commentWriterId.equals(userId);
+      if (!isWriter) return ResponseDto.noPermission();
+
+      commentRepository.delete(commentEntity);
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.databaseError();
+    }
+    return ResponseDto.success(HttpStatus.OK);
+  }
+
+  // 조회수 증가
+  @Override
+  public ResponseEntity<ResponseDto> putViewCount(Integer boardNumber) {
+    try {
+
+      boolean isExistBoard = boardRepository.existsByBoardNumber(boardNumber);
+      if (!isExistBoard) return ResponseDto.noExistBoard();
+
+      BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+      boardEntity.setBoardViewCount(boardEntity.getBoardViewCount() + 1);
+
+      boardRepository.save(boardEntity);
+      
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.databaseError();
+    }
+    return ResponseDto.success(HttpStatus.OK);
+  }
+
+  // board_score 계산
+  @Override
+  public ResponseEntity<ResponseDto> putBoardScore(Integer boardNumber) {
+    
+    try {
+
+      boolean isExistBoard = boardRepository.existsByBoardNumber(boardNumber);
+      if (!isExistBoard) return ResponseDto.noExistBoard();
+
+      BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
+      String userId = boardEntity.getUserId();
+      Integer totalScore = boardRepository.sumBoardScoreByBoardNumber(boardNumber);
+      boardEntity.setBoardScore(totalScore);
+
+      boardRepository.save(boardEntity);
+
+      // 게시글 점수가 생기면 마이페이지 테이블에 게시글 계정 점수에 수정//
+      myPageService.updateMyPageInfo(userId);
+
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.databaseError();
+    }
+
+    return ResponseDto.success(HttpStatus.OK);
+  }
   
 }

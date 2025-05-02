@@ -73,14 +73,14 @@ public class MyPageController {
     return response;
   }
 
-  @GetMapping("/my-main/{boardNumber}")
-  public ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(
-    @AuthenticationPrincipal String userId,
-    @PathVariable("boardNumber") Integer boardNumber
-  ) {
-    ResponseEntity<? super GetDetailMyBoardResponseDto> response = myPageService.getDetailMyBoard(userId, boardNumber);
-    return response;
-  }
+  // @GetMapping("/my-main/{boardNumber}")
+  // public ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(
+  //   @AuthenticationPrincipal String userId,
+  //   @PathVariable("boardNumber") Integer boardNumber
+  // ) {
+  //   ResponseEntity<? super GetDetailMyBoardResponseDto> response = myPageService.getDetailMyBoard(userId, boardNumber);
+  //   return response;
+  // }
 
   @GetMapping("/my-main/user-info")
   public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(

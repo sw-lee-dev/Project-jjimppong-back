@@ -12,22 +12,26 @@ import lombok.Getter;
 public class GetSignInUserResponseDto extends ResponseDto {
   private String userId;
   private String userNickname;
+  private Integer userLevel;
   private String userPassword;
   private String name;
   private String address;
   private String detailAddress;
   private String gender;
   private String profileImage;
+  private String joinType;
 
   private GetSignInUserResponseDto(UserEntity userEntity) {
     this.userId = userEntity.getUserId();
     this.userNickname = userEntity.getUserNickname();
+    this.userLevel = userEntity.getUserLevel();
     this.userPassword = userEntity.getUserPassword();
     this.name = userEntity.getName();
     this.address = userEntity.getAddress();
     this.detailAddress = userEntity.getDetailAddress();
     this.gender = userEntity.getGender();
     this.profileImage = userEntity.getProfileImage();
+    this.joinType = userEntity.getJoinType();
   }
 
   public static ResponseEntity<GetSignInUserResponseDto> success (UserEntity userEntity) {

@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 
 import com.ateam.jjimppong_back.common.dto.request.board.PostCommentRequestDto;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,18 +26,17 @@ public class CommentEntity {
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   private Integer commentNumber;
-  private String userId;
   private Integer boardNumber;
   private String commentContent;
-  private Integer userLevel;
-  private String writeDate;
+  private String commentWriterId;
+  private String commentWriteDate;
 
   public CommentEntity(PostCommentRequestDto dto, Integer boardNumber, String userId) {
     LocalDateTime now = LocalDateTime.now();
-    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("YYYY-MM-DD");
-    this.userId = userId;
+    DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     this.boardNumber = boardNumber;
-    this.writeDate = now.format(dateTimeFormatter);
+    this.commentWriterId = userId;
+    this.commentWriteDate = now.format(dateTimeFormatter);
     this.commentContent = dto.getCommentContent();
   }
 }

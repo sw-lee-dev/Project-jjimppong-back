@@ -23,6 +23,7 @@ public class GetBoardResponseDto extends ResponseDto {
   private Integer boardViewCount;
   private String boardAddress;
   private String boardImage;
+  private String textFileUrl;
 
   private GetBoardResponseDto(BoardEntity boardEntity){
     this.userId = boardEntity.getUserId();
@@ -35,6 +36,7 @@ public class GetBoardResponseDto extends ResponseDto {
     this.boardViewCount = boardEntity.getBoardViewCount();
     this.boardAddress = boardEntity.getBoardAddress();
     this.boardImage = boardEntity.getBoardImage();
+    this.textFileUrl = boardEntity.getTextFileUrl();
   }
 
   public static ResponseEntity<GetBoardResponseDto> success(BoardEntity boardEntity) {

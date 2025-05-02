@@ -13,7 +13,6 @@ import com.ateam.jjimppong_back.common.dto.request.mypage.PasswordReCheckRequest
 import com.ateam.jjimppong_back.common.dto.request.mypage.PostNicknameCheckRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.mypage.PatchSignInUserRequestDto;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
-import com.ateam.jjimppong_back.common.dto.response.mypage.GetDetailMyBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyLevelResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyPageBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetSignInUserResponseDto;
@@ -83,6 +82,7 @@ public class MyPageServiceImplement implements MyPageService {
       myPageEntity.setUserLevel(myPageEntity.getLevel().getNumericValue());
       userEntity.setUserLevel(myPageEntity.getLevel().getNumericValue());
       myPageRepository.save(myPageEntity);
+      userRepository.save(userEntity);
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
@@ -116,20 +116,20 @@ public class MyPageServiceImplement implements MyPageService {
     return GetMyPageBoardResponseDto.success(boardEntities);
   }
   
-  @Override
-  public ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(String userId, Integer boardNumber) {
-    BoardEntity boardEntity = null;
+  // @Override
+  // public ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(String userId, Integer boardNumber) {
+  //   BoardEntity boardEntity = null;
 
-    try {
-      boardEntity = boardRepository.findByBoardNumber(boardNumber);
-      if (boardEntity == null) return ResponseDto.noExistBoard();
-    } catch (Exception exception) {
-      exception.printStackTrace();
-      return ResponseDto.databaseError();
-    }
+  //   try {
+  //     boardEntity = boardRepository.findByBoardNumber(boardNumber);
+  //     if (boardEntity == null) return ResponseDto.noExistBoard();
+  //   } catch (Exception exception) {
+  //     exception.printStackTrace();
+  //     return ResponseDto.databaseError();
+  //   }
 
-    return GetDetailMyBoardResponseDto.success(boardEntity);
-  }
+  //   return GetDetailMyBoardResponseDto.success(boardEntity);
+  // }
 
   @Override
   public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String userId) {

@@ -3,8 +3,6 @@ package com.ateam.jjimppong_back.common.vo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.ateam.jjimppong_back.common.entity.BoardEntity;
-
 import lombok.Getter;
 
 @Getter
@@ -22,18 +20,6 @@ public class BoardVO {
   private Integer boardScore;
   private String boardAddress;
   private String boardImage;
-
-  private BoardVO(BoardEntity boardEntity) {
-    this.boardNumber = boardEntity.getBoardNumber();
-    this.boardWriteDate = boardEntity.getBoardWriteDate();
-    this.boardAddressCategory = boardEntity.getBoardAddressCategory();
-    this.boardDetailCategory = boardEntity.getBoardDetailCategory();
-    this.boardTitle = boardEntity.getBoardTitle();
-    this.boardContent = boardEntity.getBoardContent();
-    this.boardAddress = boardEntity.getBoardAddress();
-    this.boardViewCount = boardEntity.getBoardViewCount();
-    this.boardImage = boardEntity.getBoardImage();
-  }
 
   public BoardVO (
   Integer boardNumber, String boardContent, String boardTitle,
@@ -55,11 +41,24 @@ public class BoardVO {
     this.userLevel = userLevel;
   }
 
-  public static List<BoardVO> getList(List<BoardEntity> boardEntities) {
-
+  public static List<BoardVO> getList(List<BoardProjection> projections) {
     List<BoardVO> list = new ArrayList<>();
-    for (BoardEntity boardEntity: boardEntities) {
-      BoardVO vo = new BoardVO(boardEntity);
+    for (BoardProjection p: projections) {
+      BoardVO vo = new BoardVO(
+        p.getBoardNumber(),
+        p.getBoardContent(),
+        p.getBoardTitle(),
+        p.getBoardAddressCategory(),
+        p.getBoardDetailCategory(),
+        p.getBoardWriteDate(),
+        p.getBoardScore(),
+        p.getBoardViewCount(),
+        p.getBoardAddress(),
+        p.getBoardImage(),
+        p.getUserId(),
+        p.getUserNickname(),
+        p.getUserLevel()
+      );
       list.add(vo);
     }
 

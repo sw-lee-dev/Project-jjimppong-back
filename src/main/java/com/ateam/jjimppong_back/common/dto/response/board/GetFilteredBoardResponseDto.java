@@ -23,5 +23,5 @@ public class GetFilteredBoardResponseDto extends ResponseDto {
     public static ResponseEntity<GetFilteredBoardResponseDto> success(List<FilteredBoardVO> voList) {
         GetFilteredBoardResponseDto body = new GetFilteredBoardResponseDto(voList);
     return ResponseEntity.status(HttpStatus.OK).body(body);
-  }
+    }
 }

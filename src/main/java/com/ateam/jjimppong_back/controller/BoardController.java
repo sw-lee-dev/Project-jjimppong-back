@@ -5,13 +5,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ateam.jjimppong_back.common.dto.request.board.PatchBoardRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.board.PostBoardRequestDto;
+import com.ateam.jjimppong_back.common.dto.request.board.PostCommentRequestDto;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetCommentResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetFilteredBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetGoodResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.board.GetHateResponseDto;
-import com.ateam.jjimppong_back.common.dto.response.board.GetMyBoardResponseDto;
 import com.ateam.jjimppong_back.service.BoardService;
 
 import jakarta.validation.Valid;
@@ -44,13 +44,13 @@ public class BoardController {
     return response;
   }
 
-  @GetMapping("/my")
-  public ResponseEntity<? super GetMyBoardResponseDto> getMyBoard(
-    @AuthenticationPrincipal String userId
-  ) {
-    ResponseEntity<? super GetMyBoardResponseDto> response = boardService.getMyBoard(userId);
-    return response;
-  }
+  // @GetMapping("/my")
+  // public ResponseEntity<? super GetMyBoardResponseDto> getMyBoard(
+  //   @AuthenticationPrincipal String userId
+  // ) {
+  //   ResponseEntity<? super GetMyBoardResponseDto> response = boardService.getMyBoard(userId);
+  //   return response;
+  // }
 
   @GetMapping("/{boardNumber}")
   public ResponseEntity<? super GetBoardResponseDto> getBoard(
@@ -79,11 +79,30 @@ public class BoardController {
     return response;
   }
 
+  @PostMapping("/{boardNumber}/comment")
+  public ResponseEntity<ResponseDto> postComment(
+    @RequestBody @Valid PostCommentRequestDto requestBody,
+    @PathVariable("boardNumber") Integer boardNumber,
+    @AuthenticationPrincipal String userId
+  ) {
+    ResponseEntity<ResponseDto> response = boardService.postComment(requestBody, boardNumber, userId);
+    return response;
+  }
+
   @GetMapping("/{boardNumber}/comment")
   public ResponseEntity<? super GetCommentResponseDto> getComment(
     @PathVariable("boardNumber") Integer boardNumber
   ) {
     ResponseEntity<? super GetCommentResponseDto> response = boardService.getComment(boardNumber);
+    return response;
+  }
+
+  @DeleteMapping("/{boardNumber}/comment/{commentNumber}")
+  public ResponseEntity<ResponseDto> deleteComment(
+    @PathVariable("commentNumber") Integer commentNumber,
+    @AuthenticationPrincipal String userId
+  ){
+    ResponseEntity<ResponseDto> response = boardService.deleteComment(commentNumber, userId);
     return response;
   }
 
@@ -118,6 +137,22 @@ public class BoardController {
     @AuthenticationPrincipal String userId
   ) {
     ResponseEntity<ResponseDto> response = boardService.putHate(boardNumber, userId);
+    return response;
+  }
+
+  @PutMapping("/view-count/{boardNumber}")
+  public ResponseEntity<ResponseDto> putViewCount(
+    @PathVariable("boardNumber") Integer boardNumber
+  ) {
+    ResponseEntity<ResponseDto> response = boardService.putViewCount(boardNumber);
+    return response;
+  }
+
+  @PutMapping("/board-score/{boardNumber}")
+  public ResponseEntity<ResponseDto> putBoardScore(
+    @PathVariable("boardNumber") Integer boardNumber
+  ) {
+    ResponseEntity<ResponseDto> response = boardService.putBoardScore(boardNumber);
     return response;
   }
 

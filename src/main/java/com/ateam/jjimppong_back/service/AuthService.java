@@ -10,12 +10,13 @@ import com.ateam.jjimppong_back.common.dto.request.auth.NicknameCheckRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.PasswordResetRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SignInRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SignUpRequestDto;
+import com.ateam.jjimppong_back.common.dto.request.auth.SnsSignInRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SnsSignUpRequestDto;
-import com.ateam.jjimppong_back.common.dto.request.auth.SnsUserInfoRequestDto;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.IdSearchResponseDto;
-import com.ateam.jjimppong_back.common.dto.response.auth.IsExistingUserResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.SignInResponseDto;
+import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignInResponseDto;
+import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignUpResponseDto;
 
 
 public interface AuthService {
@@ -26,14 +27,15 @@ public interface AuthService {
     ResponseEntity<ResponseDto> emailAuthId(EmailAuthRequestDto dto);
     ResponseEntity<ResponseDto> emailAuthCheck(EmailAuthCheckRequestDto dto);
     ResponseEntity<ResponseDto> signUp(SignUpRequestDto dto);
-    ResponseEntity<ResponseDto> snsSignUp(SnsSignUpRequestDto dto, String snsId, String joinType);
     ResponseEntity<? super IdSearchResponseDto> idSearch(IdSearchRequestDto dto);
     ResponseEntity<ResponseDto> passwordReset(PasswordResetRequestDto dto);
-    ResponseEntity<IsExistingUserResponseDto> isExistingUser(SnsUserInfoRequestDto dto);
+    // ResponseEntity<ResponseDto> snsSignUp(SnsSignUpRequestDto dto, String snsId, String joinType);
+    ResponseEntity<? super SnsSignUpResponseDto> snsSignUp(SnsSignUpRequestDto dto);
 
     // 와일드 카드형태로 입력
     // super : 본인과 부모타입 사용
     // extends : 본인과 자식타입 사용
     ResponseEntity<? super SignInResponseDto> signIn(SignInRequestDto dto);
+    ResponseEntity<? super SnsSignInResponseDto> SnsSignIn(SnsSignInRequestDto dto);
 
 }

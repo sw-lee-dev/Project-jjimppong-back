@@ -22,7 +22,6 @@ public class SignUpRequestDto {
     @NotBlank
     private String userNickname;
 
-    @NotBlank
     // 영문과 숫자가 반드시 포함되어야 한다.
     @Pattern(regexp="^(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,13}$")
     private String userPassword;

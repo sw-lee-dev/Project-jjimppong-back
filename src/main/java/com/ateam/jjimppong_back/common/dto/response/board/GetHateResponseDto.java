@@ -9,14 +9,17 @@ import org.springframework.http.ResponseEntity;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
 import com.ateam.jjimppong_back.common.entity.HateEntity;
 
+import lombok.Getter;
+
+@Getter
 public class GetHateResponseDto extends ResponseDto{
-    private List<String> goods;
+    private List<String> hates;
 
     private GetHateResponseDto(List<HateEntity> hateEntities) {
-        this.goods = new ArrayList<>();
+        this.hates = new ArrayList<>();
         for (HateEntity hateEntity : hateEntities) {
             String userId = hateEntity.getUserId();
-            this.goods.add(userId);
+            this.hates.add(userId);
         }
     }
 

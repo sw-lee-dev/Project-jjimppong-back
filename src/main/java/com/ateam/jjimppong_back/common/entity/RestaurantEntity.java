@@ -1,14 +1,15 @@
-    package com.ateam.jjimppong_back.common.entity;
+package com.ateam.jjimppong_back.common.entity;
 
-    import jakarta.persistence.Entity;
-    import jakarta.persistence.GeneratedValue;
-    import jakarta.persistence.GenerationType;
-    import jakarta.persistence.Id;
-    import jakarta.persistence.Table;
-    import lombok.AllArgsConstructor;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
     @Entity(name = "restaurant")
     @Table(name = "restaurant")
@@ -24,4 +25,7 @@
         private String restaurantTitle;
         private String region;
         private String restaurantAddress;
+
+        @Column(name = "adm_sect_code")
+        private String admSectCode;
     }

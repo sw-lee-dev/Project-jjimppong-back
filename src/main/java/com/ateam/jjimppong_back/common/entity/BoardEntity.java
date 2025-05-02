@@ -66,6 +66,9 @@ public class BoardEntity {
     @Column(name = "board_image")
     private String boardImage;
 
+    @Column(name = "text_file_url")
+    private String textFileUrl;
+
     public BoardEntity(PostBoardRequestDto dto, String userId, String userNickname, Integer userLevel) {
         LocalDate now = LocalDate.now();
         DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -81,6 +84,7 @@ public class BoardEntity {
         this.boardScore = 0;
         this.boardAddress = dto.getBoardAddress();
         this.boardImage = dto.getBoardImage();
+        this.textFileUrl = dto.getTextFileUrl();
     }
     
 

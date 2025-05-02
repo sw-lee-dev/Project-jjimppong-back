@@ -20,7 +20,7 @@ public interface MyPageService {
   ResponseEntity<? super GetMyLevelResponseDto> getMyLevel(String userId);
   ResponseEntity<? super GetMyPageBoardResponseDto> getMyPageBoard(String userId);
   
-  ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(String userId, Integer boardNumber);
+  // ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(String userId, Integer boardNumber);
 
   ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String userId);
   ResponseEntity<ResponseDto> patchSignInUser(PatchSignInUserRequestDto dto, String userId);

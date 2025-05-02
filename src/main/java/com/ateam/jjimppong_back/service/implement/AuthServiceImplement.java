@@ -1,7 +1,5 @@
 package com.ateam.jjimppong_back.service.implement;
 
-import java.util.Optional;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -16,13 +14,15 @@ import com.ateam.jjimppong_back.common.dto.request.auth.NicknameCheckRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.PasswordResetRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SignInRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SignUpRequestDto;
+import com.ateam.jjimppong_back.common.dto.request.auth.SnsSignInRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SnsSignUpRequestDto;
-import com.ateam.jjimppong_back.common.dto.request.auth.SnsUserInfoRequestDto;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.IdSearchResponseDto;
-import com.ateam.jjimppong_back.common.dto.response.auth.IsExistingUserResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.SignInResponseDto;
+import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignInResponseDto;
+import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignUpResponseDto;
 import com.ateam.jjimppong_back.common.entity.EmailAuthEntity;
+import com.ateam.jjimppong_back.common.entity.MyPageEntity;
 import com.ateam.jjimppong_back.common.entity.SnsUserEntity;
 import com.ateam.jjimppong_back.common.entity.UserEntity;
 import com.ateam.jjimppong_back.common.util.EmailAuthNumberUtil;
@@ -40,8 +40,10 @@ import com.ateam.jjimppong_back.provider.MailPasswordResetProvider;
 import com.ateam.jjimppong_back.provider.MailProvider;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class AuthServiceImplement implements AuthService{
 
@@ -273,15 +275,15 @@ public class AuthServiceImplement implements AuthService{
             
             UserEntity userEntity = new UserEntity(dto);
 
-            // // 회원가입 시 myPageEntity가 기본값으로 생성
-            // MyPageEntity myPageEntity = new MyPageEntity();
-            // myPageEntity.setUserId(userId);
-            // myPageEntity.setUserNickname(userNickname);
-            // myPageEntity.setUserLevel(1);
-            // myPageEntity.setUserScore(0);
-            // // 양방향 관계 설정
-            // userEntity.setMyPageEntity(myPageEntity);
-            // myPageEntity.setUserEntity(userEntity);
+            // 회원가입 시 myPageEntity가 기본값으로 생성
+            MyPageEntity myPageEntity = new MyPageEntity();
+            myPageEntity.setUserId(userId);
+            myPageEntity.setUserNickname(userNickname);
+            myPageEntity.setUserLevel(1);
+            myPageEntity.setUserScore(0);
+            // 양방향 관계 설정
+            userEntity.setMyPageEntity(myPageEntity);
+            myPageEntity.setUserEntity(userEntity);
 
             userRepository.save(userEntity);
 
@@ -294,67 +296,74 @@ public class AuthServiceImplement implements AuthService{
 
     }
 
-    // 프론트에서 전달받은 추가 정보를 저장하는 로직 (회원가입과 동일)
     @Override
     @Transactional
-    public ResponseEntity<ResponseDto> snsSignUp(SnsSignUpRequestDto dto, String snsId, String joinType) {
+    public ResponseEntity<? super SnsSignUpResponseDto> snsSignUp(SnsSignUpRequestDto dto) {
+
+        String accessToken = null;
+
         try {
-        // 이메일 인증 확인
-        EmailAuthCheckRequestDto emailAuthCheckRequestDto = new EmailAuthCheckRequestDto();
-        emailAuthCheckRequestDto.setUserEmail(dto.getUserEmail());
-        emailAuthCheckRequestDto.setAuthNumber(dto.getAuthNumber());  // 인증번호는 사용자가 제공한 인증번호
+            // 이메일 인증 확인
+            EmailAuthCheckRequestDto emailAuthCheckRequestDto = new EmailAuthCheckRequestDto();
+            emailAuthCheckRequestDto.setUserEmail(dto.getUserEmail());
+            emailAuthCheckRequestDto.setAuthNumber(dto.getAuthNumber());  // 인증번호는 사용자가 제공한 인증번호
+    
+            // 이메일 인증 확인 메서드 호출
+            ResponseEntity<ResponseDto> emailAuthResponse = emailAuthCheck(emailAuthCheckRequestDto);
+    
+            // 이메일 인증 실패 시 처리
+            if (emailAuthResponse.getStatusCode() != HttpStatus.OK) {
+                return emailAuthResponse;  // 이메일 인증 실패 응답을 그대로 반환
+            }
+    
+            // 사용자 닉네임 중복 확인
+            String userNickname = dto.getUserNickname();
+            boolean existNickname = userRepository.existsByUserNickname(userNickname);
+            if (existNickname) return ResponseDto.existUser();
+    
+            // 사용자 이메일 중복 확인
+            String userEmail = dto.getUserEmail();
+            boolean existEmail = userRepository.existsByUserEmail(userEmail);
+            if (existEmail) return ResponseDto.existUser();
+    
+            // `joinType`과 `snsId`로 `userId` 생성
+            String userId = generateUserId(dto.getJoinType(), dto.getSnsId());
+    
+            // SNS 로그인 정보 추가 (snsId, joinType)
+            UserEntity userEntity = new UserEntity(dto, userId);
 
-        // 이메일 인증 확인 메서드 호출
-        ResponseEntity<ResponseDto> emailAuthResponse = emailAuthCheck(emailAuthCheckRequestDto);
+            // 회원가입 시 myPageEntity가 기본값으로 생성
+            MyPageEntity myPageEntity = new MyPageEntity();
+            myPageEntity.setUserId(userId);
+            myPageEntity.setUserNickname(userNickname);
+            myPageEntity.setUserLevel(1);
+            myPageEntity.setUserScore(0);
+            // 양방향 관계 설정
+            userEntity.setMyPageEntity(myPageEntity);
+            myPageEntity.setUserEntity(userEntity);
+    
+            // 사용자 정보 저장
+            userRepository.save(userEntity);
+    
+            // SNS 로그인 정보 저장 (userId만 전달)
+            SnsUserEntity newSnsUser = new SnsUserEntity(dto.getSnsId(), dto.getJoinType(), userId);
+            snsUserRepository.save(newSnsUser);
 
-        // 이메일 인증 실패 시 처리
-        if (emailAuthResponse.getStatusCode() != HttpStatus.OK) {
-            return emailAuthResponse;  // 이메일 인증 실패 응답을 그대로 반환
-        }
-
-        // 사용자 ID 중복 확인
-        String userId = dto.getUserId();
-        boolean existUser = userRepository.existsByUserId(userId);
-        if (existUser) return ResponseDto.existUser();
-
-        // 사용자 닉네임 중복 확인
-        String userNickname = dto.getUserNickname();
-        boolean existNickname = userRepository.existsByUserNickname(userNickname);
-        if (existNickname) return ResponseDto.existUser();
-
-        // 사용자 이메일 중복 확인
-        String userEmail = dto.getUserEmail();
-        boolean existEmail = userRepository.existsByUserEmail(userEmail);
-        if (existEmail) return ResponseDto.existUser();
-
-        // 비밀번호 암호화
-        String userPassword = dto.getUserPassword();
-        String encodedPassword = passwordEncoder.encode(userPassword);
-        dto.setUserPassword(encodedPassword);
-
-        // 새로운 UserEntity 생성
-        UserEntity userEntity = new UserEntity(dto);
-
-        // SNS 로그인 정보 추가 (snsId, joinType)
-        userEntity.setSnsId(snsId);  // SNS 로그인 ID
-        userEntity.setJoinType(joinType);  // SNS 종류 (KAKAO, NAVER 등)
-
-        // UserEntity 저장
-        userRepository.save(userEntity);
-
-        // SNS User 정보 저장
-        SnsUserEntity snsUserEntity = new SnsUserEntity();
-        snsUserEntity.setSnsId(snsId);
-        snsUserEntity.setJoinType(joinType);  // SNS 종류
-        snsUserEntity.setUserEntity(userEntity);  // UserEntity와 연결
-        snsUserRepository.save(snsUserEntity);
-
+            accessToken = jwtProvider.create(userId);
+    
         } catch (Exception exception) {
-          exception.printStackTrace();
-          return ResponseDto.databaseError();  // DB 오류 응답
+            exception.printStackTrace();
+            return ResponseDto.databaseError();  // DB 오류 응답
         }
+    
+        return SnsSignUpResponseDto.success(accessToken);  // 성공 응답
+    }
 
-        return ResponseDto.success(HttpStatus.CREATED);  // 성공 응답
+    
+    // `userId` 생성 메서드
+    private String generateUserId(String joinType, String snsId) {
+        // joinType과 snsId를 결합하여 userId 생성
+        return joinType + "_" + snsId; 
     }
 
     @Override
@@ -385,23 +394,29 @@ public class AuthServiceImplement implements AuthService{
     }
 
     @Override
-    public ResponseEntity<IsExistingUserResponseDto> isExistingUser(SnsUserInfoRequestDto dto) {
-        try {
-            // snsId와 joinType을 기준으로 사용자 존재 여부 확인
-            Optional<UserEntity> userOpt = userRepository.findBySnsIdAndJoinType(dto.getSnsId(), dto.getJoinType());
+    public ResponseEntity<? super SnsSignInResponseDto> SnsSignIn(SnsSignInRequestDto dto) {
+    
+        String accessToken = null;
 
-            if (userOpt.isPresent()) {
-                // 사용자가 존재하면 true 반환
-                return IsExistingUserResponseDto.success(true);
-            } else {
-                // 사용자가 존재하지 않으면 false 반환
-                return IsExistingUserResponseDto.userNotFound(false);
+        try {
+
+            String snsId = dto.getSnsId();
+            String joinType = dto.getJoinType();
+            String userId = joinType + snsId;
+
+            UserEntity userEntity = userRepository.findBySnsIdAndJoinType(snsId, joinType);
+            if (userEntity == null) {
+                return ResponseDto.snsNeedInfo(); // SNS 계정으로 가입된 유저 없음
             }
 
-        } catch (Exception exception) {
-            // 예외 발생 시, 데이터베이스 오류 처리
+            accessToken = jwtProvider.create(userId);
+
+        } catch(Exception exception) {
             exception.printStackTrace();
-            return IsExistingUserResponseDto.databaseError(false);
+            return ResponseDto.databaseError();
         }
+
+        return SnsSignInResponseDto.success(accessToken);
+
     }
 }

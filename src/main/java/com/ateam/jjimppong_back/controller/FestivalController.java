@@ -39,7 +39,6 @@ public class FestivalController {
     public List<FestivalDTO> getFestivals(@RequestParam String areaCode, @RequestParam String sigunguCode, @RequestHeader("Authorization") String authHeader) {
 
         String token = authHeader.replace("Bearer ", "");
-
         validateToken(token);
 
         String apiUrl = "https://apis.data.go.kr/B551011/KorService1/searchFestival1";
@@ -54,8 +53,6 @@ public class FestivalController {
                 "&areaCode=" + areaCode +
                 "&sigunguCode=" + sigunguCode +
                 "&_type=json";
-
-        System.out.println("호출 API : " + requestUrl);
 
         return webClient.get()
             .uri(URI.create(requestUrl))
@@ -85,7 +82,6 @@ private List<FestivalDTO> parseFestivalDTOs(String responseBody) {
 
     try {
         ObjectMapper objectMapper = new ObjectMapper();
-        System.out.println(responseBody);
         JsonNode rootNode = objectMapper.readTree(responseBody);
         JsonNode festivalItem = rootNode.path("response").path("body").path("items").path("item");
 

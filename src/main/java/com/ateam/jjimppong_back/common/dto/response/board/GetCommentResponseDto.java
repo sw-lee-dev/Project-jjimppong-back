@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
-import com.ateam.jjimppong_back.common.entity.CommentEntity;
 import com.ateam.jjimppong_back.common.vo.CommentVO;
 
 import lombok.Getter;
@@ -15,12 +14,12 @@ import lombok.Getter;
 public class GetCommentResponseDto extends ResponseDto {
   private List<CommentVO> comments;
 
-  private GetCommentResponseDto(List<CommentEntity> commentEntities) {
-    this.comments = CommentVO.getList(commentEntities);
+  private GetCommentResponseDto(List<CommentVO> voList) {
+    this.comments = voList;
   }
 
-  public static ResponseEntity<GetCommentResponseDto> success(List<CommentEntity> commentEntities) {
-    GetCommentResponseDto body = new GetCommentResponseDto(commentEntities);
+  public static ResponseEntity<GetCommentResponseDto> success(List<CommentVO> voList) {
+    GetCommentResponseDto body = new GetCommentResponseDto(voList);
     return ResponseEntity.status(HttpStatus.OK).body(body);
   }
 }

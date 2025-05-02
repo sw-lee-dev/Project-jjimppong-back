@@ -27,6 +27,12 @@ public class ResponseDto {
         return ResponseEntity.status(status).body(body);
     }
 
+    // SNS 추가 정보가 필요할 때 호출되는 메서드
+    public static ResponseEntity<ResponseDto> snsNeedInfo() {
+        ResponseDto body = new ResponseDto(ResponseCode.SNS_NEED_INFO, ResponseMessage.SNS_NEED_INFO);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body); // 적절한 상태 코드 사용
+    }
+
     public static ResponseEntity<ResponseDto> validationFail() {
         ResponseDto body = new ResponseDto(ResponseCode.VALIDATION_FAIL, ResponseMessage.VALIDATION_FAIL);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
@@ -90,6 +96,11 @@ public class ResponseDto {
 
     public static ResponseEntity<ResponseDto> userNotFound() {
         ResponseDto body = new ResponseDto(ResponseCode.USER_NOT_FOUND, ResponseMessage.USER_NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
+    }
+
+    public static ResponseEntity<ResponseDto> noExistComment(){
+        ResponseDto body = new ResponseDto(ResponseCode.NO_EXIST_COMMENT, ResponseMessage.NO_EXIST_COMMENT);
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 

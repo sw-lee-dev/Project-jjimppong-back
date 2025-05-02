@@ -40,26 +40,5 @@ public class FilteredBoardVO {
         this.commentCount = commentCount;
     }
 
-    public static List<FilteredBoardVO> getList(List<FilteredBoardProjection> projections) {
-        List<FilteredBoardVO> list = new ArrayList<>();
-        for (FilteredBoardProjection p : projections) {
-            FilteredBoardVO vo = new FilteredBoardVO(
-                p.getBoardNumber(),
-                p.getBoardWriteDate(),
-                p.getBoardAddressCategory(),
-                p.getBoardDetailCategory(),
-                p.getBoardTitle(),
-                p.getBoardViewCount(),
-                p.getBoardScore(),
-                p.getBoardImage(),
-                p.getUserNickname(),
-                p.getUserLevel(),
-                p.getGoodCount(),
-                p.getCommentCount()
-            );
-            list.add(vo);
-        }
-        return list;
-    }
     
 }

@@ -8,20 +8,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ateam.jjimppong_back.common.entity.PopupStoreEntity;
-import com.ateam.jjimppong_back.repository.PopupStoreRepository;
+import com.ateam.jjimppong_back.service.PopupStoreService;
 
 @RestController
 @RequestMapping("/popup-stores")
 public class PopupStoreController {
     
-    private final PopupStoreRepository popupStoreRepository;
+    private final PopupStoreService popupStoreService;
     
-    public PopupStoreController(PopupStoreRepository popupStoreRepository) {
-        this.popupStoreRepository = popupStoreRepository;   
+    public PopupStoreController(PopupStoreService popupStoreService) {
+        this.popupStoreService = popupStoreService;   
     }
 
     @GetMapping()
-    public List<PopupStoreEntity> getPopupStoreEntities(@RequestParam String region) {
-        return popupStoreRepository.findByRegion(region);
+    public List<PopupStoreEntity> getPopupStore(@RequestParam String region) {
+        return popupStoreService.findByAdmSectCode(region);
     }
 }
