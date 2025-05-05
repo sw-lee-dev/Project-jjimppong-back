@@ -25,14 +25,14 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer>{
 
   // boardScore 계산
   @Query(value = 
-    "SELECT (b.board_view_count + COUNT(DISTINCT g.user_id) + COUNT(c.board_number) - COUNT(DISTINCT h.user_id)) AS boardScore " +
+    "SELECT (b.board_view_count + COALESCE(g.goodCount, 0) + COALESCE(c.commentCount, 0) - COALESCE(h.hateCount, 0)) AS boardScore " +
     "FROM board b " +
-    "LEFT JOIN good g ON b.board_number = g.board_number " +
-    "LEFT JOIN hate h ON b.board_number = h.board_number " +
-    "LEFT JOIN comment c ON b.board_number = c.board_number " +
-    "GROUP BY b.board_number",
+    "LEFT JOIN (SELECT board_number, COUNT(board_number) AS goodCount FROM good GROUP BY board_number) g ON b.board_number = g.board_number " +
+    "LEFT JOIN (SELECT board_number, COUNT(board_number) AS hateCount FROM hate GROUP BY board_number) h ON b.board_number = h.board_number " +
+    "LEFT JOIN (SELECT board_number, COUNT(board_number) AS commentCount FROM comment GROUP BY board_number ) c ON b.board_number = c.board_number " +
+    "WHERE b.board_number = :boardNumber ",
   nativeQuery = true)
-  Integer sumBoardScoreByBoardNumber(Integer boardNumber);
+  Integer calculateBoardScore(@Param("boardNumber") Integer boardNumber);
 
 
   // boardScore 합계

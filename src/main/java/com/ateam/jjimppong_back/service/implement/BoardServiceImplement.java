@@ -367,6 +367,8 @@ public class BoardServiceImplement implements BoardService {
 
       CommentEntity commentEntity = new CommentEntity(dto, boardNumber, userId);
       commentRepository.save(commentEntity);
+      // 댓글 작성 게시글 점수 수정
+      putBoardScore(boardNumber);
       
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -405,8 +407,12 @@ public class BoardServiceImplement implements BoardService {
       if (goodEntity == null) {
         goodEntity = new GoodEntity(userId, boardNumber);
         goodRepository.save(goodEntity);
+        // 좋아요 점수 수정
+        putBoardScore(boardNumber);
       } else {
         goodRepository.delete(goodEntity);
+        // 좋아요 점수 수정
+        putBoardScore(boardNumber);
       }
 
     } catch(Exception exception) {
@@ -444,8 +450,12 @@ public class BoardServiceImplement implements BoardService {
       if (hateEntity == null) {
         hateEntity = new HateEntity(userId, boardNumber);
         hateRepository.save(hateEntity);
+        // 싫어요 게시글 점수 수정
+        putBoardScore(boardNumber);
       } else {
         hateRepository.delete(hateEntity);
+        // 싫어요 게시글 점수 수정
+        putBoardScore(boardNumber);
       }
 
     } catch(Exception exception) {
@@ -467,7 +477,12 @@ public class BoardServiceImplement implements BoardService {
       boolean isWriter = commentWriterId.equals(userId);
       if (!isWriter) return ResponseDto.noPermission();
 
+      // 게시글 점수 수정을 위해 댓글이 삭제될 게시글 번호 불러오기
+      Integer boardNumber = commentEntity.getBoardNumber();
+
       commentRepository.delete(commentEntity);
+      // 댓글 삭제되면 게시글 점수 수정
+      putBoardScore(boardNumber);
 
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -486,8 +501,10 @@ public class BoardServiceImplement implements BoardService {
 
       BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
       boardEntity.setBoardViewCount(boardEntity.getBoardViewCount() + 1);
-
+      
       boardRepository.save(boardEntity);
+      // 조회수에 따른 게시글 점수 수정
+      putBoardScore(boardNumber);
       
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -506,14 +523,15 @@ public class BoardServiceImplement implements BoardService {
       if (!isExistBoard) return ResponseDto.noExistBoard();
 
       BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
-      String userId = boardEntity.getUserId();
-      Integer totalScore = boardRepository.sumBoardScoreByBoardNumber(boardNumber);
+      Integer totalScore = boardRepository.calculateBoardScore(boardNumber);
       boardEntity.setBoardScore(totalScore);
 
       boardRepository.save(boardEntity);
 
-      // 게시글 점수가 생기면 마이페이지 테이블에 게시글 계정 점수에 수정//
+      // 게시글 점수에 따라 합산 점수가 마이페이지에 유저 점수로 입력됨
+      String userId = boardEntity.getUserId();
       myPageService.updateMyPageInfo(userId);
+      
 
     } catch (Exception exception) {
       exception.printStackTrace();

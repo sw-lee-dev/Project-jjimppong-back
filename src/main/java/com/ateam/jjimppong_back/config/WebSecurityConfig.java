@@ -64,6 +64,7 @@ public class WebSecurityConfig {
         .requestMatchers("/api/v1/auth/password-reset").permitAll()
         .requestMatchers(HttpMethod.GET, "/api/v1/board", "/api/v1/board/**").permitAll() // GET 요청으로 제대로 나눠주지 않으면 POST때 엉뚱한 토큰을 받아도 그냥 허용하게된다. 주의.
         .requestMatchers(HttpMethod.PUT, "/api/v1/board/view-count","/api/v1/board/view-count/**").permitAll() // 조회수 올리는 데에 로그인+비로그인 모든 사용자 허용
+        .requestMatchers(HttpMethod.PUT, "/api/v1/board/board-score","/api/v1/board/board-score/**").permitAll() // 조회수가 모든 사용자 허용이어서 게시글 점수도 허용
         .anyRequest().authenticated()
     )
     // description: Oauth 로그인 적용 //
