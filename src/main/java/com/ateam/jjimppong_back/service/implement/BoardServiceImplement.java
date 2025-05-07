@@ -479,7 +479,7 @@ public class BoardServiceImplement implements BoardService {
 
       // 게시글 점수 수정을 위해 댓글이 삭제될 게시글 번호 불러오기
       Integer boardNumber = commentEntity.getBoardNumber();
-
+      
       commentRepository.delete(commentEntity);
       // 댓글 삭제되면 게시글 점수 수정
       putBoardScore(boardNumber);
@@ -501,7 +501,7 @@ public class BoardServiceImplement implements BoardService {
 
       BoardEntity boardEntity = boardRepository.findByBoardNumber(boardNumber);
       boardEntity.setBoardViewCount(boardEntity.getBoardViewCount() + 1);
-      
+
       boardRepository.save(boardEntity);
       // 조회수에 따른 게시글 점수 수정
       putBoardScore(boardNumber);

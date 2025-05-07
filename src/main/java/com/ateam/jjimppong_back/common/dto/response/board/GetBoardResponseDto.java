@@ -18,7 +18,7 @@ public class GetBoardResponseDto extends ResponseDto {
   private String boardContent;
   private String boardTitle;
   private String boardAddressCategory;
-  private List<String> boardDetailCategory;
+  private String boardDetailCategory;
   private String boardWriteDate;
   private Integer boardViewCount;
   private String boardAddress;
@@ -32,6 +32,7 @@ public class GetBoardResponseDto extends ResponseDto {
     this.boardContent = boardEntity.getBoardContent();
     this.boardTitle = boardEntity.getBoardTitle();
     this.boardAddressCategory = boardEntity.getBoardAddressCategory();
+    this.boardDetailCategory = boardEntity.getBoardDetailCategory();
     this.boardWriteDate = boardEntity.getBoardWriteDate();
     this.boardViewCount = boardEntity.getBoardViewCount();
     this.boardAddress = boardEntity.getBoardAddress();

@@ -36,10 +36,19 @@ public class FestivalController {
     private final WebClient webClient = WebClient.create();
 
     @GetMapping("/festivals")
-    public List<FestivalDTO> getFestivals(@RequestParam String areaCode, @RequestParam String sigunguCode, @RequestHeader("Authorization") String authHeader) {
+    public List<FestivalDTO> getFestivals(@RequestParam String areaCode, @RequestParam String sigunguCode, @RequestHeader(value = "Authoriztion", required = false) String authHeader) { 
 
+        // TODO: 로그인 인증 토큰 검증 시 활성화
+        /* 
         String token = authHeader.replace("Bearer ", "");
-        validateToken(token);
+        validateToken(token); 
+        */
+
+        // 인증 상관없이 축제 API 출력
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            String token = authHeader.replace("Bearer ", "");
+            validateToken(token);
+        }
 
         String apiUrl = "https://apis.data.go.kr/B551011/KorService1/searchFestival1";
 
@@ -61,6 +70,7 @@ public class FestivalController {
             .map(this::parseFestivalDTOs).block();
 }
 
+// 인증 필요시
 private void validateToken(String token) {
     try {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));

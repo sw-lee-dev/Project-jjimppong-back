@@ -153,7 +153,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer>{
     "LEFT JOIN good g ON b.board_number = g.board_number " +
     "LEFT JOIN comment c ON b.board_number = c.board_number " +
     "GROUP BY b.board_number " +
-    "ORDER BY COUNT(DISTINCT g.board_number) DESC, b.board_number DESC",
+    "ORDER BY COUNT(DISTINCT g.user_id) DESC, b.board_number DESC",
     nativeQuery = true)
     List<FilteredBoardProjection> findAllWithOrderByGoodCountDesc();
 

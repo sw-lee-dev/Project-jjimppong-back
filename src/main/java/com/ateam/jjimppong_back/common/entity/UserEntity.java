@@ -2,6 +2,7 @@ package com.ateam.jjimppong_back.common.entity;
 
 import com.ateam.jjimppong_back.common.dto.request.auth.SignUpRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.auth.SnsSignUpRequestDto;
+import com.ateam.jjimppong_back.common.dto.request.mypage.PatchSNSSignInUserRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.mypage.PatchSignInUserRequestDto;
 
 import jakarta.persistence.CascadeType;
@@ -70,6 +71,15 @@ public class UserEntity {
     public void patch(PatchSignInUserRequestDto dto) {
         this.userNickname = dto.getUserNickname();
         this.userPassword = dto.getUserPassword();
+        this.address = dto.getAddress();
+        this.detailAddress = dto.getDetailAddress();
+        this.profileImage = dto.getProfileImage();
+    }
+
+    // sns 사용자의 정보 수정을 위한 메서드 - sns 로그인 하면 password 값이 null이기 때문에 수정해도 null로 고정되게 해줌
+    public void patchSNS(PatchSNSSignInUserRequestDto dto ) {
+        this.userNickname = dto.getUserNickname();
+        this.userPassword = null;
         this.address = dto.getAddress();
         this.detailAddress = dto.getDetailAddress();
         this.profileImage = dto.getProfileImage();

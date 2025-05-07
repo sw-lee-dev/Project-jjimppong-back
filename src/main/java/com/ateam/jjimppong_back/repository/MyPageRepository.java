@@ -10,6 +10,4 @@ public interface MyPageRepository extends JpaRepository<MyPageEntity, String> {
   
   MyPageEntity findByUserId(String userId);
 
-  Integer countByUserId(String userId);
-
 }

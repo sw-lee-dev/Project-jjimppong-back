@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.ateam.jjimppong_back.common.dto.request.mypage.PasswordReCheckRequestDto;
+import com.ateam.jjimppong_back.common.dto.request.mypage.PatchSNSSignInUserRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.mypage.PostNicknameCheckRequestDto;
 import com.ateam.jjimppong_back.common.dto.request.mypage.PatchSignInUserRequestDto;
 import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
@@ -116,21 +117,6 @@ public class MyPageServiceImplement implements MyPageService {
     return GetMyPageBoardResponseDto.success(boardEntities);
   }
   
-  // @Override
-  // public ResponseEntity<? super GetDetailMyBoardResponseDto> getDetailMyBoard(String userId, Integer boardNumber) {
-  //   BoardEntity boardEntity = null;
-
-  //   try {
-  //     boardEntity = boardRepository.findByBoardNumber(boardNumber);
-  //     if (boardEntity == null) return ResponseDto.noExistBoard();
-  //   } catch (Exception exception) {
-  //     exception.printStackTrace();
-  //     return ResponseDto.databaseError();
-  //   }
-
-  //   return GetDetailMyBoardResponseDto.success(boardEntity);
-  // }
-
   @Override
   public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(String userId) {
     UserEntity userEntity = null;
@@ -157,7 +143,28 @@ public class MyPageServiceImplement implements MyPageService {
       String userPassword = dto.getUserPassword();
       String encodedPassword = passwordEncoder.encode(userPassword);
       dto.setUserPassword(encodedPassword);
+
       userEntity.patch(dto);
+      userRepository.save(userEntity);
+    } catch (Exception exception) {
+      exception.printStackTrace();
+      return ResponseDto.databaseError();
+    }
+    return ResponseDto.success(HttpStatus.OK);
+  }
+
+  // sns 사용자의 정보 수정 - sns 로그인 하면 password 값이 null 이기 때문에 제외함
+  @Override
+  public ResponseEntity<ResponseDto> patchSNSSignInUser(PatchSNSSignInUserRequestDto dto, String userId) {
+
+    try {
+      UserEntity userEntity = userRepository.findByUserId(userId);
+
+      String userNickname = dto.getUserNickname();
+      boolean isExist = userRepository.existsByUserNickname(userNickname);
+      if (isExist) return ResponseDto.existUser();
+
+      userEntity.patchSNS(dto);
       userRepository.save(userEntity);
     } catch (Exception exception) {
       exception.printStackTrace();
