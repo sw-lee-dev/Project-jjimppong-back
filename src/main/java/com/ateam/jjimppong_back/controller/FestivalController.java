@@ -58,7 +58,7 @@ public class FestivalController {
                 "&pageNo=1" +
                 "&MobileOS=ETC" +
                 "&MobileApp=MapApp" +
-                "&eventStartDate=20250401" +    // 이벤트 시작 월 선택 4월 1일 이후
+                "&eventStartDate=2025-05-01" +
                 "&areaCode=" + areaCode +
                 "&sigunguCode=" + sigunguCode +
                 "&_type=json";
@@ -67,7 +67,8 @@ public class FestivalController {
             .uri(URI.create(requestUrl))
             .retrieve()
             .bodyToMono(String.class)
-            .map(this::parseFestivalDTOs).block();
+            .map(this::parseFestivalDTOs)
+            .block();
 }
 
 // 인증 필요시
@@ -95,6 +96,9 @@ private List<FestivalDTO> parseFestivalDTOs(String responseBody) {
         JsonNode rootNode = objectMapper.readTree(responseBody);
         JsonNode festivalItem = rootNode.path("response").path("body").path("items").path("item");
 
+        // 축제 기간 해당 월 설정
+        String currentMonth = String.format("%02d", java.time.LocalDate.now().getMonthValue());
+
         if (festivalItem.isArray()) {
             for (JsonNode festivalNode : festivalItem) {
                 String title = festivalNode.path("title").asText();
@@ -103,8 +107,15 @@ private List<FestivalDTO> parseFestivalDTOs(String responseBody) {
                 String image = festivalNode.path("firstimage").asText();
                 String address = festivalNode.path("addr1").asText();
 
-                FestivalDTO festivalDTO = new FestivalDTO(title, startDate, endDate, image, address);
-                festivalDTOList.add(festivalDTO);
+                // 축제 기간 해당 월 설정
+                if (startDate != null && startDate.length() == 8) {
+                    String startMonth = startDate.substring(4, 6);
+                    
+                    if (startMonth.equals(currentMonth)) {
+                        FestivalDTO festivalDTO = new FestivalDTO(title, startDate, endDate, image, address);
+                        festivalDTOList.add(festivalDTO);
+                    }
+                }
             }
         }
     } catch (Exception e) {

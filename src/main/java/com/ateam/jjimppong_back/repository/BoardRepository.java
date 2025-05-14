@@ -98,7 +98,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer>{
     "       b.user_nickname AS userNickname, " +
     "       u.user_level AS userLevel, " +
     "  COUNT(DISTINCT g.user_id) AS goodCount, " +
-    "  COUNT(c.board_number) AS commentCount " +
+    "  COUNT(DISTINCT c.comment_number) AS commentCount " +
     "FROM board b " +
     "LEFT JOIN user u ON b.user_id = u.user_id " +
     "LEFT JOIN good g ON b.board_number = g.board_number " +
@@ -122,7 +122,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer>{
     "       b.user_nickname AS userNickname, " +
     "       u.user_level AS userLevel, " +
     "  COUNT(DISTINCT g.user_id) AS goodCount, " +
-    "  COUNT(c.board_number) AS commentCount " +
+    "  COUNT(DISTINCT c.comment_number) AS commentCount " +
     "FROM board b " +
     "LEFT JOIN user u ON b.user_id = u.user_id " +
     "LEFT JOIN good g ON b.board_number = g.board_number " +
@@ -147,7 +147,7 @@ public interface BoardRepository extends JpaRepository<BoardEntity,Integer>{
     "       b.user_nickname AS userNickname, " +
     "       u.user_level AS userLevel, " +
     "  COUNT(DISTINCT g.user_id) AS goodCount, " +
-    "  COUNT(c.comment_number) AS commentCount " +
+    "  COUNT(DISTINCT c.comment_number) AS commentCount " +
     "FROM board b " +
     "LEFT JOIN user u ON b.user_id = u.user_id " +
     "LEFT JOIN good g ON b.board_number = g.board_number " +
