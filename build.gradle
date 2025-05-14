@@ -52,5 +52,4 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
-	jvmArgs += "-javaagent:${configurations.testRuntimeOnly.files.find { it.name.startsWith("byte-buddy-agent") }}"
 }
