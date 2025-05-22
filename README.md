@@ -6,7 +6,7 @@
 ![alt text](README.png)
 
 <div align="center">
-<h3><a href="http://13.124.81.10:3000/" target="_blank">배포 링크 - http://13.124.81.10:3000/</a></h3></div>
+<h3><a href="http://13.124.81.10:3000/" target="_blank">배포 링크 - http:///</a></h3></div>
 
 
 ## 📖 프로젝트 개요
