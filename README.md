@@ -21,9 +21,11 @@
 - 지도 페이지 지역별 축제, 팝업스토어, 맛집 리스트 정보 제공
 
 ## 🖥️ 기술 스택
-- Java 22
-- Spring Boot
+- Java 21
+- Spring Boot 3.4.3
+- Spring Web
 - Spring Security
+- Spring Validation
 - JWT (JSON Web Token)
 - Spring OAuth2 Client
 - Spring Data JPA
@@ -39,7 +41,7 @@
 ## ✈️ 프로젝트 실행 방법
 ```bash
 # 1. 클론 및 폴더 이동
-git clone https://github.com/JJIMBBONG/jjimbbong-back.git
+git clone https://github.com/sw-lee-dev/Project-jjimppong-back.git
 cd jjimbbong-back
 ```
 ```bash
@@ -62,11 +64,35 @@ jwt.secret=jwt_secret_key
 ```
 
 ## 🗂️ 폴더 구조
-📂 jjimbbong-back  
-├─ 📂 src/ # Spring Boot 소스 코드  
-├─ 📂 gradle # Gradle 빌드 관련 파일들  
-├─ 📃 build.gradle # Gradle 빌드 설정  
-└─ 💻 gradlew # Gradle 실행 스크립트
+📂 PROJECT-BACK
+├ 📂 node_modules
+│ ├ 📂 cors
+│ ├ 📂 object-assign
+│ └ 📂 vary
+├ 📂 src / # Spring Boot 소스 코드
+│ └ 📂 java
+│   └ 📂 com
+│     └ 📂 ateam
+│       └ 📂 jjimppong_back
+│         ├ 📂 common
+│         │ ├ 📂 dto
+│         │ │ ├ 📂 request
+│         │ │ └ 📂 response
+│         │ ├ 📂 entity
+│         │ │ └ 📂 pk
+│         │ ├ 📂 util
+│         │ └ 📂 vo
+│         ├ 📂 config
+│         ├ 📂 controller
+│         ├ 📂 filter
+│         ├ 📂 handler
+│         ├ 📂 provider
+│         ├ 📂 repository
+│         └ 📂 service
+│           └ 📂 implememt
+├ 📂 gradle  # Gradle 빌드 관련 파일들 
+├ 📄 build.gradle  # Gradle 빌드 설정    
+└ 💻 gradlew # Gradle 실행 스크립트
 
 ## 📄 라이센스
 ### Copyright (c) <2025> jjimppong
