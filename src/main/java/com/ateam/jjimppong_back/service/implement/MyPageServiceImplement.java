@@ -56,9 +56,14 @@ public class MyPageServiceImplement implements MyPageService {
   public ResponseEntity<ResponseDto> updateNicknameCheck(PostNicknameCheckRequestDto dto, String userId) {
     
     try {
+      UserEntity userEntity = userRepository.findByUserId(userId);
+      String userNickname = userEntity.getUserNickname();
       String updateNickname = dto.getUpdateNickname();
+      boolean isMatched = updateNickname.equals(userNickname);
       boolean isExistNickname = userRepository.existsByUserNickname(updateNickname);
-      if (isExistNickname) return ResponseDto.existUser();
+      if (!isMatched) {
+        if (isExistNickname) return ResponseDto.existUser();
+      }
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
@@ -135,10 +140,13 @@ public class MyPageServiceImplement implements MyPageService {
     
     try {
       UserEntity userEntity = userRepository.findByUserId(userId);
-
-      String userNickname = dto.getUserNickname();
-      boolean isExist = userRepository.existsByUserNickname(userNickname);
-      if (isExist) return ResponseDto.existUser();
+      String userNickname = userEntity.getUserNickname();
+      String updateNickname = dto.getUserNickname();
+      boolean isMatched = updateNickname.equals(userNickname);
+      boolean isExistNickname = userRepository.existsByUserNickname(updateNickname);
+      if (!isMatched) {
+        if (isExistNickname) return ResponseDto.existUser();
+      }
 
       String userPassword = dto.getUserPassword();
       String encodedPassword = passwordEncoder.encode(userPassword);
@@ -159,10 +167,13 @@ public class MyPageServiceImplement implements MyPageService {
 
     try {
       UserEntity userEntity = userRepository.findByUserId(userId);
-
-      String userNickname = dto.getUserNickname();
-      boolean isExist = userRepository.existsByUserNickname(userNickname);
-      if (isExist) return ResponseDto.existUser();
+      String userNickname = userEntity.getUserNickname();
+      String updateNickname = dto.getUserNickname();
+      boolean isMatched = updateNickname.equals(userNickname);
+      boolean isExistNickname = userRepository.existsByUserNickname(updateNickname);
+      if (!isMatched) {
+        if (isExistNickname) return ResponseDto.existUser();
+      }
 
       userEntity.patchSNS(dto);
       userRepository.save(userEntity);

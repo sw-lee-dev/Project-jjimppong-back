@@ -14,6 +14,8 @@ public interface ResponseCode {
     String PASSWORD_NOT_MATCHED = "PN";
     String USER_NOT_FOUND = "UF";
     String SNS_NEED_INFO = "SNI";
+    String NOT_EXIST_USER = "NEU";
+    String SNS_NOT_FOUND = "SNF";
     
     String NO_PERMISSION = "NP";
 

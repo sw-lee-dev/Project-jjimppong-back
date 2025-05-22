@@ -93,6 +93,9 @@ public class BoardEntity {
         this.boardDetailCategory = dto.getBoardDetailCategory();
         this.boardTitle = dto.getBoardTitle();
         this.boardContent = dto.getBoardContent();
+        this.boardAddress = dto.getBoardAddress();
+        this.boardImage = dto.getBoardImage();
+        this.textFileUrl = dto.getTextFileUrl();
     }
 
 }

@@ -191,7 +191,17 @@ public class AuthServiceImplement implements AuthService{
             }
 
             // 사용자 이름과 이메일로 사용자 정보 찾기
-            UserEntity userEntity = userRepository.findByNameAndUserEmail(name, userEmail);       
+            UserEntity userEntity = userRepository.findByNameAndUserEmail(name, userEmail);     
+            
+            // 사용자 존재 여부 확인
+            if (userEntity == null) {
+                return ResponseDto.notExistUser(); // 사용자 없음
+            }
+
+            // SNS 사용자 여부 확인
+            if (!"NORMAL".equalsIgnoreCase(userEntity.getJoinType())) {
+                return ResponseDto.snsNotFound(); // SNS 사용자는 아이디 찾기 불가
+            }
 
             // 아이디 반환
             return IdSearchResponseDto.success(userEntity.getUserId());

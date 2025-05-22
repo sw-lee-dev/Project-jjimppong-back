@@ -319,13 +319,13 @@ public class BoardServiceImplement implements BoardService {
 
       // 게시글이 삭제되면 해당 게시글의 점수가 계정 점수에서 마이너스
       myPageService.updateMyPageInfo(userId);
-
-      return ResponseDto.success(HttpStatus.NO_CONTENT);
       
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
+
+    return ResponseDto.success(HttpStatus.OK);
   }
 
   @Override

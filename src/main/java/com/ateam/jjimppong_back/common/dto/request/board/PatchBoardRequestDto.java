@@ -22,4 +22,5 @@ public class PatchBoardRequestDto {
   private String boardContent;
   private String boardAddress;
   private String boardImage;
+  private String textFileUrl;
 }

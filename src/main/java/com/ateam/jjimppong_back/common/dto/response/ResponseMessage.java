@@ -14,6 +14,8 @@ public interface ResponseMessage {
     String PASSWORD_NOT_MATCHED = "Password Not Matched";
     String USER_NOT_FOUND = "User Not Found";
     String SNS_NEED_INFO = "Sns Need Info";
+    String NOT_EXIST_USER = "Not Exist User";
+    String SNS_NOT_FOUND = "Sns Not Found";
     
     String NO_PERMISSION = "No Permission.";
 

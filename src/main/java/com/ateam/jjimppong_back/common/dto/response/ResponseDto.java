@@ -104,4 +104,14 @@ public class ResponseDto {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(body);
     }
 
+    public static ResponseEntity<ResponseDto> notExistUser(){
+        ResponseDto body = new ResponseDto(ResponseCode.NOT_EXIST_USER, ResponseMessage.NOT_EXIST_USER);
+        return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
+    public static ResponseEntity<ResponseDto> snsNotFound(){
+        ResponseDto body = new ResponseDto(ResponseCode.SNS_NOT_FOUND, ResponseMessage.SNS_NOT_FOUND);
+        return ResponseEntity.status(HttpStatus.OK).body(body);
+    }
+
 }
