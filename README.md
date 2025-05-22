@@ -64,35 +64,35 @@ jwt.secret=jwt_secret_key
 ```
 
 ## 🗂️ 폴더 구조
-📂 PROJECT-BACK
-├ 📂 node_modules
-│ ├ 📂 cors
-│ ├ 📂 object-assign
-│ └ 📂 vary
-├ 📂 src / # Spring Boot 소스 코드
-│ └ 📂 java
-│   └ 📂 com
-│     └ 📂 ateam
-│       └ 📂 jjimppong_back
-│         ├ 📂 common
-│         │ ├ 📂 dto
-│         │ │ ├ 📂 request
-│         │ │ └ 📂 response
-│         │ ├ 📂 entity
-│         │ │ └ 📂 pk
-│         │ ├ 📂 util
-│         │ └ 📂 vo
-│         ├ 📂 config
-│         ├ 📂 controller
-│         ├ 📂 filter
-│         ├ 📂 handler
-│         ├ 📂 provider
-│         ├ 📂 repository
-│         └ 📂 service
-│           └ 📂 implememt
-├ 📂 gradle  # Gradle 빌드 관련 파일들 
-├ 📄 build.gradle  # Gradle 빌드 설정    
-└ 💻 gradlew # Gradle 실행 스크립트
+📂 PROJECT-BACK  
+├ 📂 node_modules  
+│ ├ 📂 cors  
+│ ├ 📂 object-assign  
+│ └ 📂 vary  
+├ 📂 src / # Spring Boot 소스 코드  
+│ └ 📂 java  
+│   └ 📂 com  
+│     └ 📂 ateam  
+│       └ 📂 jjimppong_back  
+│         ├ 📂 common  
+│         │ ├ 📂 dto  
+│         │ │ ├ 📂 request  
+│         │ │ └ 📂 response  
+│         │ ├ 📂 entity  
+│         │ │ └ 📂 pk  
+│         │ ├ 📂 util  
+│         │ └ 📂 vo  
+│         ├ 📂 config  
+│         ├ 📂 controller  
+│         ├ 📂 filter  
+│         ├ 📂 handler  
+│         ├ 📂 provider  
+│         ├ 📂 repository  
+│         └ 📂 service  
+│           └ 📂 implememt  
+├ 📂 gradle  # Gradle 빌드 관련 파일들  
+├ 📄 build.gradle  # Gradle 빌드 설정   
+└ 💻 gradlew # Gradle 실행 스크립트  
 
 ## 📄 라이센스
 ### Copyright (c) <2025> jjimppong
