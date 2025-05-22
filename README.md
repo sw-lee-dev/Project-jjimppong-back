@@ -64,6 +64,7 @@ jwt.secret=jwt_secret_key
 ```
 
 ## 🗂️ 폴더 구조
+```md
 📂 PROJECT-BACK  
 ├ 📂 node_modules  
 │ ├ 📂 cors  
@@ -93,6 +94,7 @@ jwt.secret=jwt_secret_key
 ├ 📂 gradle  # Gradle 빌드 관련 파일들  
 ├ 📄 build.gradle  # Gradle 빌드 설정   
 └ 💻 gradlew # Gradle 실행 스크립트  
+```
 
 ## 📄 라이센스
 ### Copyright (c) <2025> jjimppong
