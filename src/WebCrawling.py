@@ -10,7 +10,7 @@ import pymysql
 import time
 
 date_format = "%y.%m.%d"
-start_date = datetime(2025, 4, 17)
+start_date = datetime(2025, 5, 1)
 end_date = datetime(2025, 12, 31)
 
 chrome_options = Options()
