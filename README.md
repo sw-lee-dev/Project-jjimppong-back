@@ -5,9 +5,6 @@
 
 ![alt text](README.png)
 
-<div align="center">
-<h3><a href="http:///" target="_blank">배포 링크 - http:///</a></h3></div>
-
 
 ## 📖 프로젝트 개요
 지역 주민들의 생생한 여행·지역 정보를 공유하는 커뮤니티 서비스.  
@@ -57,9 +54,9 @@ cd jjimbbong-back
 ```properties
 # application.properties 파일
 spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
-spring.datasource.url=jdbc:mysql://127.0.0.1:3306/jjimppong?serverTimezone=UTC&characterEncoding=UTF-8
-spring.datasource.username=root
-spring.datasource.password=root
+spring.datasource.url=jdbc:mysql://localhost/mysqlDB?serverTimezone=UTC&characterEncoding=UTF-8
+spring.datasource.username=mysql
+spring.datasource.password=password123
 jwt.secret=jwt_secret_key
 ```
 
