@@ -18,22 +18,22 @@ import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyLevelResponseDto
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyPageBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetSignInUserResponseDto;
 import com.ateam.jjimppong_back.common.entity.BoardEntity;
-import com.ateam.jjimppong_back.common.entity.MyPageEntity;
+import com.ateam.jjimppong_back.common.entity.MyScoreEntity;
 import com.ateam.jjimppong_back.common.entity.UserEntity;
 import com.ateam.jjimppong_back.repository.BoardRepository;
-import com.ateam.jjimppong_back.repository.MyPageRepository;
+import com.ateam.jjimppong_back.repository.MyScoreRepository;
 import com.ateam.jjimppong_back.repository.UserRepository;
-import com.ateam.jjimppong_back.service.MyPageService;
+import com.ateam.jjimppong_back.service.MyScoreService;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class MyPageServiceImplement implements MyPageService {
+public class MyPageServiceImplement implements MyScoreService {
 
   private final UserRepository userRepository;
   private final BoardRepository boardRepository;
-  private final MyPageRepository myPageRepository;
+  private final MyScoreRepository myScoreRepository;
   private PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
   
   @Override
@@ -72,22 +72,22 @@ public class MyPageServiceImplement implements MyPageService {
   }
 
   @Override
-  public ResponseEntity<ResponseDto> updateMyPageInfo(String userId) {
+  public ResponseEntity<ResponseDto> updateMyPageScore(String userId) {
     
     try {
       UserEntity userEntity = userRepository.findByUserId(userId);
-      MyPageEntity myPageEntity = userEntity.getMyPageEntity();
-      if (myPageEntity == null) {
-        myPageEntity = new MyPageEntity();
-        myPageEntity.setUserEntity(userEntity);
-        userEntity.setMyPageEntity(myPageEntity);
+      MyScoreEntity myScoreEntity = userEntity.getMyScoreEntity();
+      if (myScoreEntity == null) {
+        myScoreEntity = new MyScoreEntity();
+        myScoreEntity.setUserEntity(userEntity);
+        userEntity.setMyScoreEntity(myScoreEntity);
       }
 
       Integer totalScore = boardRepository.sumBoardScoreByUserId(userId);
-      myPageEntity.setUserScore(totalScore);
-      myPageEntity.setUserLevel(myPageEntity.getLevel().getNumericValue());
-      userEntity.setUserLevel(myPageEntity.getLevel().getNumericValue());
-      myPageRepository.save(myPageEntity);
+      myScoreEntity.setUserScore(totalScore);
+      myScoreEntity.setUserLevel(myScoreEntity.getLevel().getNumericValue());
+      userEntity.setUserLevel(myScoreEntity.getLevel().getNumericValue());
+      myScoreRepository.save(myScoreEntity);
       userRepository.save(userEntity);
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -98,15 +98,15 @@ public class MyPageServiceImplement implements MyPageService {
 
   @Override
   public ResponseEntity<? super GetMyLevelResponseDto> getMyLevel(String userId) {
-    MyPageEntity myPageEntity = null;
+    MyScoreEntity myScoreEntity = null;
 
     try {
-      myPageEntity = myPageRepository.findByUserId(userId);
+      myScoreEntity = myScoreRepository.findByUserId(userId);
     } catch (Exception exception) {
       exception.printStackTrace();
       return ResponseDto.databaseError();
     }
-    return GetMyLevelResponseDto.success(myPageEntity);
+    return GetMyLevelResponseDto.success(myScoreEntity);
   }
   
   @Override

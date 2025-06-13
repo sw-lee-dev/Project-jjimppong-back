@@ -22,7 +22,7 @@ import com.ateam.jjimppong_back.common.dto.response.auth.SignInResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignInResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.auth.SnsSignUpResponseDto;
 import com.ateam.jjimppong_back.common.entity.EmailAuthEntity;
-import com.ateam.jjimppong_back.common.entity.MyPageEntity;
+import com.ateam.jjimppong_back.common.entity.MyScoreEntity;
 import com.ateam.jjimppong_back.common.entity.SnsUserEntity;
 import com.ateam.jjimppong_back.common.entity.UserEntity;
 import com.ateam.jjimppong_back.common.util.EmailAuthNumberUtil;
@@ -285,15 +285,15 @@ public class AuthServiceImplement implements AuthService{
             
             UserEntity userEntity = new UserEntity(dto);
 
-            // 회원가입 시 myPageEntity가 기본값으로 생성
-            MyPageEntity myPageEntity = new MyPageEntity();
-            myPageEntity.setUserId(userId);
-            myPageEntity.setUserNickname(userNickname);
-            myPageEntity.setUserLevel(1);
-            myPageEntity.setUserScore(0);
+            // 회원가입 시 myScoreEntity가 기본값으로 생성
+            MyScoreEntity myScoreEntity = new MyScoreEntity();
+            myScoreEntity.setUserId(userId);
+            myScoreEntity.setUserNickname(userNickname);
+            myScoreEntity.setUserLevel(1);
+            myScoreEntity.setUserScore(0);
             // 양방향 관계 설정
-            userEntity.setMyPageEntity(myPageEntity);
-            myPageEntity.setUserEntity(userEntity);
+            userEntity.setMyScoreEntity(myScoreEntity);
+            myScoreEntity.setUserEntity(userEntity);
 
             userRepository.save(userEntity);
 
@@ -342,15 +342,15 @@ public class AuthServiceImplement implements AuthService{
             // SNS 로그인 정보 추가 (snsId, joinType)
             UserEntity userEntity = new UserEntity(dto, userId);
 
-            // 회원가입 시 myPageEntity가 기본값으로 생성
-            MyPageEntity myPageEntity = new MyPageEntity();
-            myPageEntity.setUserId(userId);
-            myPageEntity.setUserNickname(userNickname);
-            myPageEntity.setUserLevel(1);
-            myPageEntity.setUserScore(0);
+            // 회원가입 시 myScoreEntity가 기본값으로 생성
+            MyScoreEntity myScoreEntity = new MyScoreEntity();
+            myScoreEntity.setUserId(userId);
+            myScoreEntity.setUserNickname(userNickname);
+            myScoreEntity.setUserLevel(1);
+            myScoreEntity.setUserScore(0);
             // 양방향 관계 설정
-            userEntity.setMyPageEntity(myPageEntity);
-            myPageEntity.setUserEntity(userEntity);
+            userEntity.setMyScoreEntity(myScoreEntity);
+            myScoreEntity.setUserEntity(userEntity);
     
             // 사용자 정보 저장
             userRepository.save(userEntity);

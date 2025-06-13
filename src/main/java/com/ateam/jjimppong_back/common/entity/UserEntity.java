@@ -38,7 +38,7 @@ public class UserEntity {
 
     // userEntity와 myPageEntity간의 일대일 연관관계 매핑
     @OneToOne(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private MyPageEntity myPageEntity;
+    private MyScoreEntity myScoreEntity;
 
     public UserEntity(SignUpRequestDto dto){ 
         this.userId = dto.getUserId();

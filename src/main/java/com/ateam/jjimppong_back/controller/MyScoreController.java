@@ -18,7 +18,7 @@ import com.ateam.jjimppong_back.common.dto.response.ResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyLevelResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyPageBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetSignInUserResponseDto;
-import com.ateam.jjimppong_back.service.MyPageService;
+import com.ateam.jjimppong_back.service.MyScoreService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -26,16 +26,16 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/api/v1/my-page")
 @RequiredArgsConstructor
-public class MyPageController {
+public class MyScoreController {
 
-  private final MyPageService myPageService;
+  private final MyScoreService myScoreService;
 
   @PostMapping({"", "/"})
   public ResponseEntity<ResponseDto> passwordReCheck(
     @RequestBody @Valid PasswordReCheckRequestDto requestBody,
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<ResponseDto> response = myPageService.passwordReCheck(requestBody, userId);
+    ResponseEntity<ResponseDto> response = myScoreService.passwordReCheck(requestBody, userId);
     return response;
   }
 
@@ -44,15 +44,15 @@ public class MyPageController {
     @RequestBody @Valid PostNicknameCheckRequestDto requestBody,
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<ResponseDto> response = myPageService.updateNicknameCheck(requestBody, userId);
+    ResponseEntity<ResponseDto> response = myScoreService.updateNicknameCheck(requestBody, userId);
     return response;
   }
 
   @PutMapping("/my-main")
-  public ResponseEntity<ResponseDto> updateMyPageInfo(
+  public ResponseEntity<ResponseDto> updateMyPageScore(
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<ResponseDto> response = myPageService.updateMyPageInfo(userId);
+    ResponseEntity<ResponseDto> response = myScoreService.updateMyPageScore(userId);
     return response;
   }
 
@@ -60,7 +60,7 @@ public class MyPageController {
   public ResponseEntity<? super GetMyLevelResponseDto> getMyLevel(
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<? super GetMyLevelResponseDto> response = myPageService.getMyLevel(userId);
+    ResponseEntity<? super GetMyLevelResponseDto> response = myScoreService.getMyLevel(userId);
     return response;
   }
 
@@ -68,7 +68,7 @@ public class MyPageController {
   public ResponseEntity<? super GetMyPageBoardResponseDto> getMyPageBoard(
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<? super GetMyPageBoardResponseDto> response = myPageService.getMyPageBoard(userId);
+    ResponseEntity<? super GetMyPageBoardResponseDto> response = myScoreService.getMyPageBoard(userId);
     return response;
   }
 
@@ -76,7 +76,7 @@ public class MyPageController {
   public ResponseEntity<? super GetSignInUserResponseDto> getSignInUser(
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<? super GetSignInUserResponseDto> response = myPageService.getSignInUser(userId);
+    ResponseEntity<? super GetSignInUserResponseDto> response = myScoreService.getSignInUser(userId);
     return response;
   }
 
@@ -85,7 +85,7 @@ public class MyPageController {
     @RequestBody @Valid PatchSignInUserRequestDto requestBody,
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<ResponseDto> response = myPageService.patchSignInUser(requestBody, userId);
+    ResponseEntity<ResponseDto> response = myScoreService.patchSignInUser(requestBody, userId);
     return response;
   }
 
@@ -95,7 +95,7 @@ public class MyPageController {
     @RequestBody @Valid PatchSNSSignInUserRequestDto requestBody,
     @AuthenticationPrincipal String userId
   ) {
-    ResponseEntity<ResponseDto> response = myPageService.patchSNSSignInUser(requestBody, userId);
+    ResponseEntity<ResponseDto> response = myScoreService.patchSNSSignInUser(requestBody, userId);
     return response;
   }
   

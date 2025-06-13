@@ -12,17 +12,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity(name = "myPage")
-@Table(name = "my_page")
+@Entity(name = "myScore")
+@Table(name = "my_score")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MyPageEntity {
+public class MyScoreEntity {
   @Id
   private String userId;
   private String userNickname;
-  // private Integer boardNumber;
   private Integer userLevel;
   private Integer userScore;
 

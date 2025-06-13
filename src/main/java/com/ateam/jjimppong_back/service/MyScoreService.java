@@ -11,11 +11,11 @@ import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyLevelResponseDto
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetMyPageBoardResponseDto;
 import com.ateam.jjimppong_back.common.dto.response.mypage.GetSignInUserResponseDto;
 
-public interface MyPageService {
+public interface MyScoreService {
   ResponseEntity<ResponseDto> passwordReCheck(PasswordReCheckRequestDto dto, String userId);
   ResponseEntity<ResponseDto> updateNicknameCheck(PostNicknameCheckRequestDto dto, String userId);
 
-  ResponseEntity<ResponseDto> updateMyPageInfo(String userId);
+  ResponseEntity<ResponseDto> updateMyPageScore(String userId);
 
   ResponseEntity<? super GetMyLevelResponseDto> getMyLevel(String userId);
   ResponseEntity<? super GetMyPageBoardResponseDto> getMyPageBoard(String userId);

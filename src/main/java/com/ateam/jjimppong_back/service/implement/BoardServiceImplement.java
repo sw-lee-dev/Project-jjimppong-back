@@ -34,7 +34,7 @@ import com.ateam.jjimppong_back.repository.GoodRepository;
 import com.ateam.jjimppong_back.repository.HateRepository;
 import com.ateam.jjimppong_back.repository.UserRepository;
 import com.ateam.jjimppong_back.service.BoardService;
-import com.ateam.jjimppong_back.service.MyPageService;
+import com.ateam.jjimppong_back.service.MyScoreService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -47,7 +47,7 @@ public class BoardServiceImplement implements BoardService {
   private final CommentRepository commentRepository; 
   private final GoodRepository goodRepository;
   private final HateRepository hateRepository;
-  private final MyPageService myPageService;
+  private final MyScoreService myScoreService;
 
   @Override
   public ResponseEntity<ResponseDto> postBoard(PostBoardRequestDto dto, String userId) {
@@ -66,7 +66,7 @@ public class BoardServiceImplement implements BoardService {
           boardRepository.save(boardEntity);
 
           // ✅ 마이페이지 점수 업데이트 로직
-          myPageService.updateMyPageInfo(userId);
+          myScoreService.updateMyPageScore(userId);
 
       } catch (Exception exception) {
           exception.printStackTrace();
@@ -75,43 +75,6 @@ public class BoardServiceImplement implements BoardService {
 
       return ResponseDto.success(HttpStatus.CREATED);
   }
-
-  // @Override
-  // public ResponseEntity<? super GetMyBoardResponseDto> getMyBoard(String userId) {
-    
-  //   List<BoardVO> voList = new ArrayList<>();
-
-  //   try {
-
-  //     List<BoardProjection> projections = boardRepository.findByUserIdOrderByBoardNumberDesc(userId);
-
-  //     for (BoardProjection B : projections) {
-  //       BoardVO vo = new BoardVO(
-  //         B.getBoardNumber(),
-  //         B.getBoardContent(),
-  //         B.getBoardTitle(),
-  //         B.getBoardAddressCategory(),
-  //         B.getBoardDetailCategory(),
-  //         B.getBoardWriteDate(),
-  //         B.getBoardViewCount(),
-  //         B.getBoardScore(),
-  //         B.getBoardAddress(),
-  //         B.getBoardImage(),
-  //         B.getUserId(),
-  //         B.getUserNickname(),
-  //         B.getUserLevel()
-  //       );
-  //       voList.add(vo);
-  //     }
-      
-  //   } catch (Exception exception) {
-  //     exception.printStackTrace();
-  //     return ResponseDto.databaseError();
-  //   }
-
-  //   return GetMyBoardResponseDto.success(voList);
-    
-  // }
 
   @Override
   public ResponseEntity<? super GetBoardResponseDto> getBoard(Integer boardNumber) {
@@ -318,7 +281,7 @@ public class BoardServiceImplement implements BoardService {
       boardRepository.delete(boardEntity);
 
       // 게시글이 삭제되면 해당 게시글의 점수가 계정 점수에서 마이너스
-      myPageService.updateMyPageInfo(userId);
+      myScoreService.updateMyPageScore(userId);
       
     } catch (Exception exception) {
       exception.printStackTrace();
@@ -530,7 +493,7 @@ public class BoardServiceImplement implements BoardService {
 
       // 게시글 점수에 따라 합산 점수가 마이페이지에 유저 점수로 입력됨
       String userId = boardEntity.getUserId();
-      myPageService.updateMyPageInfo(userId);
+      myScoreService.updateMyPageScore(userId);
       
 
     } catch (Exception exception) {
